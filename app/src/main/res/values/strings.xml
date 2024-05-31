@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">FinalProjectv3</string>
+    <string name="plantID" translatable="false">29385823858238</string>
+    <string name="splashName" translatable="false">Lets take care of your plants</string>
+    <string name="exampleName" translatable="false">John</string>
+    <string name="menuName" translatable="false">My Plants</string>
+    <string name="LeFakeButton" translatable="false">></string>
+    <string name="Stats" translatable="false">Statistics</string>
+    <string name="Comms" translatable="false">Community</string>
+    <string name="status_page" translatable="false">Plants</string>
+    <string name="addplant_page" translatable="false">Add Plants</string>
+    <string name="plantinfo_page" translatable="false">Plant Statistics</string>
+    <string name="plantlist_info" translatable="false">Your Plants!</string>
+    <string name="back_button" translatable="false">Back</string>
+</resources>
