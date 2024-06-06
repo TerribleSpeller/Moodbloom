@@ -2,12 +2,23 @@ package com.comporg.finalprojectv3
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+
+
+
 
 class PageThree : AppCompatActivity() {
 
+    private lateinit var myRef: DatabaseReference
+    private lateinit var textView: TextView
     // define the global variable
     private lateinit var question3: TextView
     // Add button Move previous activity
@@ -21,6 +32,11 @@ class PageThree : AppCompatActivity() {
         // file use findViewById() to get the Button and textview.
         previous_button = findViewById(R.id.third_activity_previous_button)
         question3 = findViewById(R.id.question3_id)
+        textView = findViewById(R.id.TextView)
+
+
+        val database = FirebaseDatabase.getInstance("https://sem4-appeng-database-default-rtdb.asia-southeast1.firebasedatabase.app")
+        myRef = database.getReference("humidity") // Adjust the path to your data
 
         // In question1 get the TextView use by findViewById()
         // In TextView set question Answer for message
@@ -34,5 +50,22 @@ class PageThree : AppCompatActivity() {
             // start the activity connect to the specified class
             startActivity(intent)
         }
+
+        myRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // Get the data from the snapshot
+                val value = when (val data = dataSnapshot.value) {
+                    is String -> data
+                    is Long -> data.toString()
+                    else -> "Unknown type"
+                }                // Display the data in the TextView
+                textView.text = value
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Log the error
+                Log.w("Firebase", "Failed to read value.", error.toException())
+            }
+        })
     }
 }
