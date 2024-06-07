@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+
 
 class CustomAdapter(private val mList: List<plantItem>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
@@ -29,6 +31,8 @@ class CustomAdapter(private val mList: List<plantItem>) : RecyclerView.Adapter<C
         //holder.imageView.setImageResource(ItemsViewModel.image)
 
         // sets the text to the textview from our itemHolder class
+        //holder.imageView.setImageResource(plantItem.)
+        Picasso.get().load(plantItem.Img).into(holder.imageView);
         holder.textView.text = plantItem.Name
         holder.textView2.text = plantItem.MoistMax.toString()
         holder.textView3.text = plantItem.MoistMin.toString()

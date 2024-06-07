@@ -55,10 +55,10 @@ class PageThree : AppCompatActivity() {
 
                 // Display the data in the TextView or process it as needed
                     plantMap.forEach { (key, value) ->
-                        Log.d("Firebase", "Plant Name: ${value?.Name}, MoistMax: ${value?.MoistMax}, MoistMin: ${value?.MoistMin}")
+                        Log.d("Firebase", "Plant Name: ${value?.Name}, img = ${value?.Img} MoistMax: ${value?.MoistMax}, MoistMin: ${value?.MoistMin}")
                         // Append data to the TextView for demonstration
                         //textView.append("Plant Name: ${value?.Name}, MoistMax: ${value?.MoistMax}, MoistMin: ${value?.MoistMin}\n")
-                        data.add(plantItem(MoistMax = value!!.MoistMax, MoistMin = value!!.MoistMin, " ${value?.Name}" ))
+                        data.add(plantItem(Img = value!!.Img, MoistMax = value!!.MoistMax, MoistMin = value!!.MoistMin, " ${value?.Name}" ))
 
                     }
                 }
