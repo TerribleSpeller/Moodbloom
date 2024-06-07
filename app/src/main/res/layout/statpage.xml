@@ -12,42 +12,75 @@
         android:scaleType="centerCrop"
         android:src="@drawable/plantpic"
         android:alpha="0.8"/>
-
-    <TextView
-        android:id="@+id/humidViewXML"
+    
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="140dp"
-        android:layout_marginTop="100dp"
-        android:text="Hello, Firebase!"
-        android:textSize="20sp" />
+        android:orientation="vertical"
+        android:padding="10dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp">
+            <TextView
+                android:id="@+id/humidViewText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginTop="100dp"
+                android:text="Hello, Firebase!"
+                android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/humidViewText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="100dp"
-        android:text="Hello, Firebase!"
-        android:textSize="20sp" />
+            <TextView
+                android:id="@+id/humidViewXML"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="140dp"
+                android:layout_marginTop="100dp"
+                android:text="Hello, Firebase!"
+                android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/moistViewXML"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="140dp"
-        android:layout_marginTop="200dp"
-        android:text="Hello, Firebase!"
-        android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/moistViewText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="200dp"
-        android:text="Hello, Firebase!"
-        android:textSize="20sp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/moistViewText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginTop="200dp"
+                android:text="Hello, Firebase!"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/moistViewXML"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="140dp"
+                android:layout_marginTop="200dp"
+                android:text="Hello, Firebase!"
+                android:textSize="20sp" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+
+
+
+
 
     <androidx.compose.ui.platform.ComposeView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/compose_view"

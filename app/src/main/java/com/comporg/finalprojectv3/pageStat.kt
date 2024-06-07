@@ -51,8 +51,8 @@ class PageStat: AppCompatActivity() {
 
 
         val database = FirebaseDatabase.getInstance("https://sem4-appeng-database-default-rtdb.asia-southeast1.firebasedatabase.app")
-        databaseRef1 = database.getReference("humidity") // Adjust the path to your data
-        databaseRef2 = database.getReference("moisture") // Adjust the path to your data
+        databaseRef1 = database.getReference("CurrentData/humidity") // Adjust the path to your data
+        databaseRef2 = database.getReference("CurrentData/moisture") // Adjust the path to your data
 
         // Find the ComposeView in the layout
         val composeView: ComposeView = findViewById(R.id.compose_view)
@@ -94,7 +94,7 @@ class PageStat: AppCompatActivity() {
         // Set the content of the ComposeView
         composeView.setContent {
             // Call your composable function here
-            testText()
+            //testText()
         }
 
 
@@ -103,12 +103,12 @@ class PageStat: AppCompatActivity() {
     }
 }
 
-@Composable
-fun testText(
-
-) {
-    Text(text = "Amongus")
-}
+//@Composable
+//fun testText(
+//
+//) {
+//    Text(text = "Amongus")
+//}
 
 
 
