@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
@@ -51,30 +52,17 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import com.comporg.finalprojectv3.data.PlantIDClass
 import com.comporg.finalprojectv3.data.examplePlant
+import androidx.appcompat.app.AppCompatActivity
 
+class PageOneActivity : AppCompatActivity() {
 
-
-class PageOneFragment : Fragment() {
-
-
-    /**
-     * TODO: Figure this out. Help. Because rn it needs for onCreateView to use @Composable functions
-     */
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.pageone, container, false)
-
-        val composeView = view.findViewById<ComposeView>(R.id.compose_view)
-        composeView.setContent {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
             HomePage()
         }
-
-        return view
     }
 }
-
 
 enum class AppScreen(@StringRes val title: Int) {
     Status(title = R.string.status_page),
@@ -83,9 +71,6 @@ enum class AppScreen(@StringRes val title: Int) {
     PlantList (title = R.string.plantlist_info)
 }
 
-/**
- * Composable that displays the topBar and displays back button if back navigation is possible. Taken from Cupcake
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
@@ -113,10 +98,6 @@ fun AppBar(
     )
 }
 
-/**
- *
- *Home Page Composable
- */
 @Composable
 fun HomePage() {
     Column(
@@ -132,10 +113,8 @@ fun HomePage() {
         )
         bottomMenu()
     }
-
 }
 
-//Plant Part
 @Composable
 fun PlantImage(plant: PlantIDClass, modifier: Modifier = Modifier) {
     Column(
@@ -149,30 +128,21 @@ fun PlantImage(plant: PlantIDClass, modifier: Modifier = Modifier) {
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
-
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = modifier
-
-            //.fillMaxWidth()
         ) {
-            /*TODO*/
-            //Greeting("User")
             PlantStateIcon(plant.StateIconImg)
-
         }
         Row(
             modifier = modifier
-            // .fillMaxWidth()
         ) {
             PlantImg(plant.StateImage)
         }
-
     }
 }
 
-/*For the State Image*/
 @Composable
 fun PlantStateIcon(
     @DrawableRes plantStateImage: Int,
@@ -189,10 +159,8 @@ fun PlantStateIcon(
             contentDescription = null
         )
     }
-
 }
 
-/*For the State Image*/
 @Composable
 fun PlantImg(
     @DrawableRes plantStateImage: Int,
@@ -231,15 +199,12 @@ fun TopBar(
                 painter = painterResource(R.drawable.smalleruser),
                 contentDescription = null,
                 modifier = Modifier.clickable {
-                    /*TODO Make User Page    */
                     val intent = Intent(context, PageThree::class.java)
-                    context.startActivity(intent) },
-
+                    context.startActivity(intent)
+                },
             )
         }
-        Row(
-
-        ) {
+        Row {
             Text(
                 stringResource(R.string.splashName), fontSize = 20.sp
             )
@@ -259,9 +224,9 @@ fun myPlantsMenu(
             .padding(32.dp, 0.dp)
             .fillMaxWidth()
             .clickable {
-                /*TODO Make MyPlants Page    */
                 val intent = Intent(context, PageThree::class.java)
-                context.startActivity(intent) },
+                context.startActivity(intent)
+            },
     ) {
         Text(
             stringResource(R.string.menuName), fontSize = 30.sp
@@ -281,46 +246,29 @@ fun bottomMenu(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Color.Gray
-            )
+            .background(Color.Gray)
     ) {
-        Column(
-            modifier = Modifier
-
-        ) {
+        Column {
             Row(
-                //For the top button to add more plants
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .padding(0.dp, 0.dp)
                     .fillMaxWidth()
                     .offset(0.dp, -20.dp)
-
             ) {
                 Image(
                     painter = painterResource(R.drawable.plussymbollate),
                     modifier = modifier
                         .size(50.dp)
                         .clickable {
-                            /*TODO Make AddPlants Page    */
                             val intent = Intent(context, PageThree::class.java)
-                            context.startActivity(intent) },
-                    //.padding(0.dp, 0.dp, 0.dp, 5.dp),
+                            context.startActivity(intent)
+                        },
                     contentDescription = null
                 )
-                /*
-                Canvas(modifier = Modifier.fillMaxWidth()) {
-                    scale(scaleX = 5f, scaleY = 5f) {
-                        drawCircle(Color.LightGray, radius = 5.dp.toPx())
-                    }
-                }
-                */
             }
             Row(
-                //For Stats and Comms
                 horizontalArrangement = Arrangement.SpaceBetween,
-
                 modifier = Modifier
                     .padding(82.dp, 12.dp)
                     .fillMaxWidth()
@@ -330,14 +278,13 @@ fun bottomMenu(
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                     modifier = Modifier
                         .clickable {
-                            /*TODO Make Statistics Page a Placeholder    */
                             val intent = Intent(context, PageStat::class.java)
-                            context.startActivity(intent) },
+                            context.startActivity(intent)
+                        },
                 ) {
                     Image(
                         painter = painterResource(R.drawable.staticon),
                         modifier = modifier.size(50.dp),
-                        //.padding(0.dp, 0.dp, 0.dp, 5.dp),
                         contentDescription = null
                     )
                     Text(
@@ -348,9 +295,9 @@ fun bottomMenu(
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .clickable {
-                            /*TODO Make Community Page a Placeholder    */
                             val intent = Intent(context, PageFour::class.java)
-                            context.startActivity(intent) }
+                            context.startActivity(intent)
+                        }
                 ) {
                     Image(
                         painter = painterResource(R.drawable.commicon),
@@ -361,8 +308,6 @@ fun bottomMenu(
                         stringResource(R.string.Comms), fontSize = 15.sp
                     )
                 }
-
-
             }
         }
     }
