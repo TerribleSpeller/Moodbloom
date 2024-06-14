@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
@@ -52,6 +53,7 @@ class PageUserPlants: AppCompatActivity() {
 //            data.add(plantItem(R.drawable.button, "Item " + i))
 //        }
 
+        val previous_button = findViewById<ImageView>(R.id.backButton)
 
 
         val database = FirebaseDatabase.getInstance("https://sem4-appeng-database-default-rtdb.asia-southeast1.firebasedatabase.app")
@@ -95,5 +97,13 @@ class PageUserPlants: AppCompatActivity() {
                 TODO("Not yet implemented")
             }
         })
+
+        previous_button.setOnClickListener {
+            // Intents are objects of the android.content.Intent type. Your code can send them to the Android system defining
+            // the components you are targeting. Intent to start an activity called oneActivity with the following code
+            val intent = Intent(this, PageOneActivity::class.java)
+            // start the activity connect to the specified class
+            startActivity(intent)
+        }
 
 }}
