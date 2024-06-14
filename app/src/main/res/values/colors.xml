@@ -10,4 +10,8 @@
     <color name="yellow">#FFC801</color>
     <color name="green">#FF00FF00</color> <!-- Green -->
     <color name="mint_green">#FF98FF98</color> <!-- Mint Green -->
+    <color name="bottom_nav">#E2E6D8</color>
+    <color name="heading">#343C1D</color>
+    <color name="subheading">#98A181</color>
+    <color name="handle">#A2A1A1</color>
 </resources>

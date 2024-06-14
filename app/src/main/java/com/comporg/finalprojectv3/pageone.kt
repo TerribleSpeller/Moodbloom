@@ -53,6 +53,14 @@ import androidx.compose.ui.platform.LocalContext
 import com.comporg.finalprojectv3.data.PlantIDClass
 import com.comporg.finalprojectv3.data.examplePlant
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 
 class PageOneActivity : AppCompatActivity() {
 
@@ -79,8 +87,13 @@ fun AppBar(
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val customFontFamily = FontFamily(Font(R.font.font_family))
+
     TopAppBar(
-        title = { Text(stringResource(currentScreen.title)) },
+        title = { Text(stringResource(currentScreen.title),
+            style = TextStyle(
+                fontFamily = customFontFamily,
+            ) ) },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
@@ -103,6 +116,7 @@ fun HomePage() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.White)
     ) {
         TopBar(stringResource(R.string.exampleName))
         myPlantsMenu()
@@ -150,10 +164,11 @@ fun PlantStateIcon(
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 0.dp)
+        modifier = Modifier.padding(0.dp, 12.dp, 0.dp, 0.dp)
     ) {
         Image(
             modifier = modifier
+                .padding(top = 15.dp)
                 .size(100.dp),
             painter = painterResource(plantStateImage),
             contentDescription = null
@@ -169,7 +184,7 @@ fun PlantImg(
     Image(
         modifier = modifier
             .size(350.dp)
-            .padding(0.dp, 10.dp),
+            .padding(bottom = 30.dp),
         painter = painterResource(plantStateImage),
         contentDescription = null
     )
@@ -181,10 +196,11 @@ fun TopBar(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val customFontFamily = FontFamily(Font(R.font.font_family))
 
     Column(
         modifier = Modifier
-            .padding(32.dp)
+            .padding(start = 32.dp, top = 50.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -193,20 +209,34 @@ fun TopBar(
         ) {
             Text(
                 "Hello $userName!",
-                fontSize = 30.sp
+                fontSize = 30.sp,
+                style = TextStyle(
+                    fontFamily = customFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    color = colorResource(id = R.color.heading)
+                )
             )
             Image(
                 painter = painterResource(R.drawable.smalleruser),
                 contentDescription = null,
-                modifier = Modifier.clickable {
-                    val intent = Intent(context, PageThree::class.java)
-                    context.startActivity(intent)
-                },
+                modifier = Modifier
+                    .clickable {
+                        val intent = Intent(context, PageThree::class.java)
+                        context.startActivity(intent)
+                    }
+                    .padding(end = 35.dp),
+
             )
         }
         Row {
             Text(
-                stringResource(R.string.splashName), fontSize = 20.sp
+                stringResource(R.string.splashName),
+                Modifier.padding(top = 10.dp),
+                fontSize = 20.sp,
+                style = TextStyle(
+                    fontFamily = customFontFamily,
+                    fontStyle = FontStyle.Italic,
+                    color = colorResource(id = R.color.subheading))
             )
         }
     }
@@ -217,6 +247,7 @@ fun myPlantsMenu(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val customFontFamily = FontFamily(Font(R.font.font_family))
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -229,10 +260,18 @@ fun myPlantsMenu(
             },
     ) {
         Text(
-            stringResource(R.string.menuName), fontSize = 30.sp
+            stringResource(R.string.menuName),
+            Modifier.padding(top = 40.dp),
+            fontSize = 25.sp,
+            style = TextStyle(
+                fontFamily = customFontFamily,
+                fontWeight = FontWeight.Bold,
+                color = colorResource(id = R.color.heading))
         )
         Text(
-            stringResource(R.string.LeFakeButton), fontSize = 30.sp
+            stringResource(R.string.LeFakeButton),
+            Modifier.padding(top = 35.dp),
+            fontSize = 30.sp,
         )
     }
 }
@@ -246,15 +285,24 @@ fun bottomMenu(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Gray)
+            .background(Color.Transparent)
+            .padding(bottom = 0.dp)
     ) {
-        Column {
+        Image(
+            painter = painterResource(R.drawable.bottommenubox),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
+        Column (
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center
+        ){
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .padding(0.dp, 0.dp)
                     .fillMaxWidth()
-                    .offset(0.dp, -20.dp)
+                    .offset(0.dp, -10.dp)
             ) {
                 Image(
                     painter = painterResource(R.drawable.plussymbollate),
@@ -270,9 +318,9 @@ fun bottomMenu(
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
-                    .padding(82.dp, 12.dp)
+                    .padding(60.dp, 6.dp)
                     .fillMaxWidth()
-                    .offset(0.dp, -30.dp)
+                    .offset(0.dp, -25.dp)
             ) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(2.dp),
@@ -284,11 +332,8 @@ fun bottomMenu(
                 ) {
                     Image(
                         painter = painterResource(R.drawable.staticon),
-                        modifier = modifier.size(50.dp),
+                        modifier = modifier.size(70.dp),
                         contentDescription = null
-                    )
-                    Text(
-                        stringResource(R.string.Stats), fontSize = 15.sp
                     )
                 }
                 Column(
@@ -304,11 +349,13 @@ fun bottomMenu(
                         modifier = modifier.size(70.dp),
                         contentDescription = null
                     )
-                    Text(
-                        stringResource(R.string.Comms), fontSize = 15.sp
-                    )
                 }
             }
         }
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun HomePagePreview() {
+    HomePage()
 }
