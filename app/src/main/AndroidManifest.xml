@@ -30,6 +30,9 @@
             android:name=".PageOneActivity"
             android:exported="false" />
         <activity
+            android:name=".PageUserPlants"
+            android:exported="false" />
+        <activity
             android:name=".SignInActivity"
             android:exported="true">
             <intent-filter>

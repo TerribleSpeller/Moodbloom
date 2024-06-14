@@ -255,7 +255,7 @@ fun myPlantsMenu(
             .padding(32.dp, 0.dp)
             .fillMaxWidth()
             .clickable {
-                val intent = Intent(context, PageThree::class.java)
+                val intent = Intent(context, PageUserPlants::class.java)
                 context.startActivity(intent)
             },
     ) {
