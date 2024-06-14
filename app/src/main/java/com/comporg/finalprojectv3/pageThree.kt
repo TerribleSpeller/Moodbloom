@@ -7,8 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.GridLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DatabaseReference
@@ -28,9 +31,11 @@ class PageThree : AppCompatActivity() {
         setContentView(R.layout.pagethree)
 
         val recyclerview = findViewById<RecyclerView>(R.id.recyclerview)
+        val layoutManager = GridLayoutManager(this, 2)
 
         // this creates a vertical layout Manager
-        recyclerview.layoutManager = LinearLayoutManager(this)
+        recyclerview.layoutManager = layoutManager
+        val previous_button = findViewById<ImageView>(R.id.backButton)
 
         // ArrayList of class ItemsViewModel
         val data = ArrayList<plantItem>()
@@ -84,7 +89,14 @@ class PageThree : AppCompatActivity() {
                 TODO("Not yet implemented")
             }
         })
-        
+
+        previous_button.setOnClickListener {
+            // Intents are objects of the android.content.Intent type. Your code can send them to the Android system defining
+            // the components you are targeting. Intent to start an activity called oneActivity with the following code
+            val intent = Intent(this, PageOneActivity::class.java)
+            // start the activity connect to the specified class
+            startActivity(intent)
+        }
 
 
         

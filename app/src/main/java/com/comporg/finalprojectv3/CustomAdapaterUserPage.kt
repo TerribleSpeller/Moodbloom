@@ -10,17 +10,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
 
-class CustomAdapter(private val mList: List<plantItem>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+class CustomAdapter2(private val mList: List<userPlantItem>) : RecyclerView.Adapter<CustomAdapter2.ViewHolder>() {
 
     // create new views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         // inflates the card_view_design view
         // that is used to hold list item
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.listitem, parent, false)
+            .inflate(R.layout.listmyitem, parent, false)
 
         return ViewHolder(view)
     }
+
+
 
     // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -34,8 +36,6 @@ class CustomAdapter(private val mList: List<plantItem>) : RecyclerView.Adapter<C
         //holder.imageView.setImageResource(plantItem.)
         Picasso.get().load(plantItem.Img).into(holder.imageView);
         holder.textView.text = plantItem.Name
-        holder.textView2.text = plantItem.MoistMax.toString()
-        holder.textView3.text = plantItem.MoistMin.toString()
 
     }
 
@@ -48,7 +48,6 @@ class CustomAdapter(private val mList: List<plantItem>) : RecyclerView.Adapter<C
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageview)
         val textView: TextView = itemView.findViewById(R.id.plantname)
-        val textView2: TextView = itemView.findViewById(R.id.moistmaxdisplay)
-        val textView3: TextView = itemView.findViewById(R.id.moistmindisplay)
+
     }
 }

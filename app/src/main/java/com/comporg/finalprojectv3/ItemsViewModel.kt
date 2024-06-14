@@ -13,6 +13,7 @@ data class plantItem(
 
 data class userPlantItem(
     val Name: String = "",
+    val Img: String = "",
     val Humidity: Int = 0,
     val Moisture: Int = 0,
     val Temperature: Int = 0,

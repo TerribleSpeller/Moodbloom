@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Firebase
@@ -37,12 +38,13 @@ class PageUserPlants: AppCompatActivity() {
         setContentView(R.layout.pagethree)
 
         val recyclerview = findViewById<RecyclerView>(R.id.recyclerview)
+        val layoutManager = GridLayoutManager(this, 2)
 
         // this creates a vertical layout Manager
-        recyclerview.layoutManager = LinearLayoutManager(this)
+        recyclerview.layoutManager = layoutManager
 
         // ArrayList of class ItemsViewModel
-        val data = ArrayList<plantItem>()
+        val data = ArrayList<userPlantItem>()
 
         // This loop will create 20 Views containing
         // the image with the count of view
@@ -67,7 +69,7 @@ class PageUserPlants: AppCompatActivity() {
                     Log.d("Firebase", "Plant Name: ${value?.Name}, ID = ${value?.ID} Humidity: ${value?.Humidity}, Moisture: ${value?.Moisture}, Temperature: ${value?.Temperature}")
                     // Append data to the TextView for demonstration
                     //textView.append("Plant Name: ${value?.Name}, MoistMax: ${value?.MoistMax}, MoistMin: ${value?.MoistMin}\n")
-                    // data.add(plantItem(MoistMax = value!!.MoistMax, MoistMin = value!!.MoistMin, " ${value?.Name}" ))
+                    data.add(userPlantItem(Name = value!!.Name, Img = value!!.Img))
 
                 }
             }
@@ -81,7 +83,7 @@ class PageUserPlants: AppCompatActivity() {
         })
 
         // This will pass the ArrayList to our Adapter
-        val adapter = CustomAdapter(data)
+        val adapter = CustomAdapter2(data)
         Log.d("Firebase", data.toString())
 
         databaseRef1.addValueEventListener(object: ValueEventListener {
