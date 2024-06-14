@@ -352,6 +352,13 @@ fun bottomMenu(
                 }
             }
         }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)  // Adjust height as necessary
+                .align(Alignment.BottomCenter)
+                .background(colorResource(id = R.color.bottom_nav))  // Set to the desired background color
+        )
     }
 }
 @Preview(showBackground = true)
