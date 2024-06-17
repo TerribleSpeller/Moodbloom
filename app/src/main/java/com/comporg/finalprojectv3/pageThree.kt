@@ -3,16 +3,9 @@ package com.comporg.finalprojectv3
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.GridLayout
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.DataSnapshot
@@ -23,8 +16,9 @@ import com.google.firebase.database.ValueEventListener
 
 
 
-class PageThree : AppCompatActivity() {
+class PageThree : AppCompatActivity(), OnItemClickListener<plantItem>   {
     private lateinit var databaseRef1: DatabaseReference
+    private lateinit var databaseRef2: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +43,8 @@ class PageThree : AppCompatActivity() {
 
 
         val database = FirebaseDatabase.getInstance("https://sem4-appeng-database-default-rtdb.asia-southeast1.firebasedatabase.app")
-        databaseRef1 = database.getReference("ListPlants") // Adjust the path to your data
+        databaseRef1 = database.getReference("ListPlants")
+        databaseRef2 = database.getReference("UserPlants/TestUser/UserPlants")
 
         databaseRef1.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -57,6 +52,7 @@ class PageThree : AppCompatActivity() {
                 val plantMap = dataSnapshot.children.associate {
                     it.key to it.getValue(plantItem::class.java)
                 }
+
 
                 // Display the data in the TextView or process it as needed
                     plantMap.forEach { (key, value) ->
@@ -77,11 +73,12 @@ class PageThree : AppCompatActivity() {
         })
 
         // This will pass the ArrayList to our Adapter
-        val adapter = CustomAdapter(data)
+        val adapter = CustomAdapter(data, this)
         Log.d("Firebase", data.toString())
 
         databaseRef1.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+
                 recyclerview.adapter = adapter
             }
 
@@ -89,6 +86,7 @@ class PageThree : AppCompatActivity() {
                 TODO("Not yet implemented")
             }
         })
+
 
         previous_button.setOnClickListener {
             // Intents are objects of the android.content.Intent type. Your code can send them to the Android system defining
@@ -102,5 +100,39 @@ class PageThree : AppCompatActivity() {
         
         // Setting the Adapter with the recyclerview
     }
+
+    override fun onItemClick(plantItem: plantItem) {
+        // Handle the click event here
+        Log.d("ItemClick", "Clicked on: ${plantItem.Name}")
+        val thingToPush = userPlantItem(name = plantItem.Name, img = plantItem.Img)
+        addPlantToFirebase(thingToPush)
+    }
+
+    override fun onCancelClick(plantItem: plantItem) {
+        Log.d("ItemClick", "Clicked on: ${plantItem.Name}")
+        //Just here to suppress an error.
+    }
+
+    private fun addPlantToFirebase(plantItem: userPlantItem) {
+        // Generate a new unique key
+        val newPlantRef = databaseRef2.push()
+        val newPlantId = newPlantRef.key
+        val plantWithId = plantItem.copy(id = newPlantId!!)
+
+
+        // Set the value at the new reference
+        newPlantRef.setValue(plantWithId)
+            .addOnSuccessListener {
+                // Data written successfully
+                Log.d("Firebase", "Data added successfully with ID: $newPlantId")
+                startActivity(Intent(this, PageOneActivity::class.java))
+
+            }
+            .addOnFailureListener { exception ->
+                // Error occurred
+                Log.e("Firebase", "Error adding data", exception)
+            }
+    }
 }
+
 

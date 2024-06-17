@@ -3,107 +3,76 @@ package com.comporg.finalprojectv3
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.Firebase
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 
-class PageUserPlants: AppCompatActivity() {
-    private lateinit var databaseRef1: DatabaseReference //To Call the database to see plants that one has.
+class PageUserPlants : AppCompatActivity(), OnItemClickListener<userPlantItem> {
+    private lateinit var databaseRef1: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.pagethree)
+        setContentView(R.layout.pageuserplants)
 
         val recyclerview = findViewById<RecyclerView>(R.id.recyclerview)
-        val layoutManager = GridLayoutManager(this, 2)
-
-        // this creates a vertical layout Manager
+        val layoutManager = GridLayoutManager(this, 2) //Thanks.
         recyclerview.layoutManager = layoutManager
 
-        // ArrayList of class ItemsViewModel
-        val data = ArrayList<userPlantItem>()
-
-        // This loop will create 20 Views containing
-        // the image with the count of view
-//        for (i in 1..20) {
-//            data.add(plantItem(R.drawable.button, "Item " + i))
-//        }
-
-        val previous_button = findViewById<ImageView>(R.id.backButton)
-
-
-        val database = FirebaseDatabase.getInstance("https://sem4-appeng-database-default-rtdb.asia-southeast1.firebasedatabase.app")
-        databaseRef1 = database.getReference("UserPlants/TestUser/UserPlants") // Adjust the path to your data
+        val data = ArrayList<userPlantItem>() //I hate data.
+        val database =
+            FirebaseDatabase.getInstance("https://sem4-appeng-database-default-rtdb.asia-southeast1.firebasedatabase.app")
+        databaseRef1 = database.getReference("UserPlants/TestUser/UserPlants")
 
         databaseRef1.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get the data from the snapshot
-                val plantMap = dataSnapshot.children.associate {
-                    it.key to it.getValue(userPlantItem::class.java)
+                dataSnapshot.children.mapNotNullTo(data) {
+                    it.getValue(userPlantItem::class.java)
                 }
-
-                // Display the data in the TextView or process it as needed
-                plantMap.forEach { (key, value) ->
-                    Log.d("Firebase", "Plant Name: ${value?.Name}, ID = ${value?.ID} Humidity: ${value?.Humidity}, Moisture: ${value?.Moisture}, Temperature: ${value?.Temperature}")
-                    // Append data to the TextView for demonstration
-                    //textView.append("Plant Name: ${value?.Name}, MoistMax: ${value?.MoistMax}, MoistMin: ${value?.MoistMin}\n")
-                    data.add(userPlantItem(Name = value!!.Name, Img = value!!.Img))
-
-                }
+                recyclerview.adapter?.notifyDataSetChanged() //I don't understand this.
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Log the error
                 Log.w("Firebase", "Failed to read value.", error.toException())
             }
-
-
         })
 
-        // This will pass the ArrayList to our Adapter
-        val adapter = CustomAdapter2(data)
-        Log.d("Firebase", data.toString())
+        val adapter = CustomAdapter2(data, this, this)
+        recyclerview.adapter = adapter
 
-        databaseRef1.addValueEventListener(object: ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                recyclerview.adapter = adapter
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
+        val previous_button = findViewById<ImageView>(R.id.backButton)
 
         previous_button.setOnClickListener {
-            // Intents are objects of the android.content.Intent type. Your code can send them to the Android system defining
-            // the components you are targeting. Intent to start an activity called oneActivity with the following code
-            val intent = Intent(this, PageOneActivity::class.java)
-            // start the activity connect to the specified class
-            startActivity(intent)
+            startActivity(Intent(this, PageOneActivity::class.java))
         }
 
-}}
+
+    }
+    override fun onItemClick(item: userPlantItem) {
+        Log.d("ItemClick", "Clicked on: ${item.name}")
+        // Handle item click for userPlantItem
+    }
+
+    override fun onCancelClick(item: userPlantItem) {
+        Log.d("CancelClick", "Cancel clicked: ${item.id}")
+        removePlantToFirebase(item)
+    }
+
+    private fun removePlantToFirebase(plantItem: userPlantItem) {
+        // Generate loc
+        val plantRef = databaseRef1.child(plantItem.id)
+        // Removing the value at the specified reference
+        Log.d("Firebase",plantRef.toString())
+        plantRef.removeValue()
+            .addOnSuccessListener {
+                Log.d("Firebase", "Data removed successfully for ID: ${plantItem.id}")
+                startActivity(Intent(this, PageOneActivity::class.java))
+            }
+            .addOnFailureListener { exception ->
+                Log.e("Firebase", "Error removing data", exception)
+            }
+
+
+    }
+}

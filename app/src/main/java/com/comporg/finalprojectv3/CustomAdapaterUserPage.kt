@@ -1,6 +1,5 @@
 package com.comporg.finalprojectv3
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,45 +8,43 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
+class CustomAdapter2(
+    private val mList: List<userPlantItem>,
+    private val listener: OnItemClickListener<userPlantItem>,
+    private val textListener: OnItemClickListener<userPlantItem>
+) : RecyclerView.Adapter<CustomAdapter2.ViewHolder>() {
 
-class CustomAdapter2(private val mList: List<userPlantItem>) : RecyclerView.Adapter<CustomAdapter2.ViewHolder>() {
-
-    // create new views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // inflates the card_view_design view
-        // that is used to hold list item
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.listmyitem, parent, false)
-
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.listmyitem, parent, false)
         return ViewHolder(view)
     }
 
-
-
-    // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val userPlantItem = mList[position]
+        Picasso.get().load(userPlantItem.img).into(holder.imageView)
+        holder.textView.text = userPlantItem.name
 
-        val plantItem = mList[position]
+        holder.itemView.setOnClickListener {
+            listener.onItemClick(userPlantItem)
+        }
 
-        // sets the image to the imageview from our itemHolder class
-        //holder.imageView.setImageResource(ItemsViewModel.image)
+        // Set the text view click listener
+        holder.textView.setOnClickListener {
+            textListener.onCancelClick(userPlantItem)
+        }
 
-        // sets the text to the textview from our itemHolder class
-        //holder.imageView.setImageResource(plantItem.)
-        Picasso.get().load(plantItem.Img).into(holder.imageView);
-        holder.textView.text = plantItem.Name
-
+        // Set the cancel button click listener
+        holder.cancelButton.setOnClickListener {
+            textListener.onCancelClick(userPlantItem) // Call the onCancelClick method
+        }
     }
 
-    // return the number of the items in the list
-    override fun getItemCount(): Int {
-        return mList.size
-    }
+    override fun getItemCount(): Int = mList.size
 
-    // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageview)
         val textView: TextView = itemView.findViewById(R.id.plantname)
+        val cancelButton: TextView = itemView.findViewById(R.id.CancelButton)
 
     }
 }
