@@ -1,16 +1,11 @@
 package com.comporg.finalprojectv3
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.util.Log
 import androidx.activity.compose.setContent
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -21,9 +16,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,34 +28,40 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.fragment.app.Fragment
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
-import com.comporg.finalprojectv3.data.PlantIDClass
-import com.comporg.finalprojectv3.data.examplePlant
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.height
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import com.comporg.finalprojectv3.data.PlantIDClass
+import com.comporg.finalprojectv3.data.examplePlant
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+
 
 class PageOneActivity : AppCompatActivity() {
 
@@ -122,6 +123,7 @@ fun HomePage() {
         myPlantsMenu()
         PlantImage(
             examplePlant,
+            "meha",
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_medium))
         )
@@ -130,7 +132,7 @@ fun HomePage() {
 }
 
 @Composable
-fun PlantImage(plant: PlantIDClass, modifier: Modifier = Modifier) {
+fun PlantImage(plant: PlantIDClass, img: String, modifier: Modifier = Modifier) {
     Column(
         modifier = Modifier
             .animateContentSize(
@@ -152,14 +154,14 @@ fun PlantImage(plant: PlantIDClass, modifier: Modifier = Modifier) {
         Row(
             modifier = modifier
         ) {
-            PlantImg(plant.StateImage)
+            PlantImg()
         }
     }
 }
 
 @Composable
 fun PlantStateIcon(
-    @DrawableRes plantStateImage: Int,
+    plantStateImage: Int,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -178,17 +180,62 @@ fun PlantStateIcon(
 
 @Composable
 fun PlantImg(
-    @DrawableRes plantStateImage: Int,
     modifier: Modifier = Modifier
 ) {
+    lateinit var databaseRef1: DatabaseReference
+    val database = FirebaseDatabase.getInstance("https://sem4-appeng-database-default-rtdb.asia-southeast1.firebasedatabase.app")
+    databaseRef1 = database.getReference("CurrentData")
+
+    // Create a variable to hold the Firebase Storage URL
+    // Create a variable to hold the Firebase Storage URL
+    var firebaseImageUrl by remember { mutableStateOf<String?>(null) }
+
+    // Fetch Firebase Storage URL asynchronously
+    LaunchedEffect(key1 = true) {
+        val valueEventListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // Assuming snapshot.getValue() returns the URL as a String
+                firebaseImageUrl = snapshot.getValue(String::class.java)
+                Log.d("Firebase", "Fetched URL: $firebaseImageUrl")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error
+                Log.e("Firebase", "Error fetching image URL", error.toException())
+            }
+        }
+        databaseRef1.child("img").addListenerForSingleValueEvent(valueEventListener)
+
+    }
+
+    val painter = // Optionally, you can customize the image loading
+        // e.g., placeholder, error, transformations
+        rememberAsyncImagePainter(firebaseImageUrl)
+
+    Log.d("Firebase", firebaseImageUrl.toString())
+
     Image(
+        painter = painter,
+        contentDescription = null,
         modifier = modifier
-            .size(350.dp)
-            .padding(bottom = 30.dp),
-        painter = painterResource(plantStateImage),
-        contentDescription = null
+            .size(330.dp)
+            .padding(top = 15.dp)
     )
 }
+
+//@Composable
+//fun PlantImg(
+//    @DrawableRes plantStateImage: Int,
+//    modifier: Modifier = Modifier
+//) {
+//    Image(
+//        modifier = modifier
+//            .size(350.dp)
+//            .padding(bottom = 30.dp),
+//        painter = painterResource(plantStateImage),
+//        contentDescription = null
+//    )
+//}
 
 @Composable
 fun TopBar(

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PageOneFragment"
+    tools:context=".PageOneActivity"
     tools:layout_editor_absoluteY="0dp">
 
     <androidx.compose.ui.platform.ComposeView xmlns:android="http://schemas.android.com/apk/res/android"

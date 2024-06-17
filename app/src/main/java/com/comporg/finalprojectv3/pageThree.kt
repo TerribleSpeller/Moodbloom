@@ -7,9 +7,9 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
@@ -114,7 +114,6 @@ class PageThree : AppCompatActivity(), OnItemClickListener<plantItem>   {
     }
 
     private fun addPlantToFirebase(plantItem: userPlantItem) {
-        // Generate a new unique key
         val newPlantRef = databaseRef2.push()
         val newPlantId = newPlantRef.key
         val plantWithId = plantItem.copy(id = newPlantId!!)

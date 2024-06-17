@@ -7,10 +7,15 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class PageUserPlants : AppCompatActivity(), OnItemClickListener<userPlantItem> {
     private lateinit var databaseRef1: DatabaseReference
+    private lateinit var frontPagedatabaseRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +29,7 @@ class PageUserPlants : AppCompatActivity(), OnItemClickListener<userPlantItem> {
         val database =
             FirebaseDatabase.getInstance("https://sem4-appeng-database-default-rtdb.asia-southeast1.firebasedatabase.app")
         databaseRef1 = database.getReference("UserPlants/TestUser/UserPlants")
+        frontPagedatabaseRef = database.getReference("CurrentData")
 
         databaseRef1.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -52,6 +58,7 @@ class PageUserPlants : AppCompatActivity(), OnItemClickListener<userPlantItem> {
     override fun onItemClick(item: userPlantItem) {
         Log.d("ItemClick", "Clicked on: ${item.name}")
         // Handle item click for userPlantItem
+        updateMainPath(item)
     }
 
     override fun onCancelClick(item: userPlantItem) {
@@ -72,6 +79,32 @@ class PageUserPlants : AppCompatActivity(), OnItemClickListener<userPlantItem> {
             .addOnFailureListener { exception ->
                 Log.e("Firebase", "Error removing data", exception)
             }
+    }
+
+    private fun updateMainPath(plantItem: userPlantItem) {
+        Log.d("Firebase", "Thig to push ${plantItem}")
+        // Set the value t the new reference
+        frontPagedatabaseRef.child("img").setValue(plantItem.img)
+            .addOnSuccessListener {
+                Log.d("Firebase", "Data removed successfully for ID: ${plantItem.id}")
+                //startActivity(Intent(this, PageOneActivity::class.java))
+            }
+            .addOnFailureListener { exception ->
+                // Error occurred
+                Log.e("Firebase", "Error adding data", exception)
+            }
+        frontPagedatabaseRef.child("currentPlant").setValue(plantItem.name)
+            .addOnSuccessListener {
+                Log.d("Firebase", "Data removed successfully for ID: ${plantItem.id}")
+                startActivity(Intent(this, PageOneActivity::class.java))
+            }
+            .addOnFailureListener { exception ->
+                // Error occurred
+                Log.e("Firebase", "Error adding data", exception)
+            }
+        //TODO: Get optimal Humidity and Moisture levels
+
+        startActivity(Intent(this, PageOneActivity::class.java))
 
 
     }
