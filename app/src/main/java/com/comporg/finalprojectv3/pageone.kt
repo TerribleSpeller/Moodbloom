@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -149,7 +150,7 @@ fun PlantImage(plant: PlantIDClass, img: String, modifier: Modifier = Modifier) 
             horizontalArrangement = Arrangement.Center,
             modifier = modifier
         ) {
-            PlantStateIcon(plant.StateIconImg)
+            PlantStateIcon()
         }
         Row(
             modifier = modifier
@@ -161,21 +162,108 @@ fun PlantImage(plant: PlantIDClass, img: String, modifier: Modifier = Modifier) 
 
 @Composable
 fun PlantStateIcon(
-    plantStateImage: Int,
     modifier: Modifier = Modifier
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.padding(0.dp, 12.dp, 0.dp, 0.dp)
     ) {
-        Image(
-            modifier = modifier
-                .padding(top = 15.dp)
-                .size(100.dp),
-            painter = painterResource(plantStateImage),
-            contentDescription = null
-        )
+        PlantStateIconImg()
     }
+}
+
+@Composable
+fun PlantStateIconImg(
+    modifier: Modifier = Modifier
+) {
+    lateinit var databaseRef2: DatabaseReference
+    lateinit var databaseRef3: DatabaseReference
+    val database = FirebaseDatabase.getInstance("https://sem4-appeng-database-default-rtdb.asia-southeast1.firebasedatabase.app")
+    databaseRef2 = database.getReference("CurrentData")
+    databaseRef3 = database.getReference("ListPlants")
+
+    var isError by remember { mutableStateOf(false) }
+    var moistMax by remember { mutableStateOf<Int?>(null) }
+    var moistMin by remember { mutableStateOf<Int?>(null) }
+    var currentMoist by remember { mutableStateOf<Int?>(null) }
+    var painterNeutral = painterResource(R.drawable.neutral)
+    var painterPositive = painterResource(R.drawable.happy)
+    var painterNegative = painterResource(R.drawable.angery_)
+    var painter by remember { mutableStateOf(painterNeutral) }
+
+    fun updatePainter() {
+        if (currentMoist != null && moistMin != null && moistMax != null) {
+            painter = when {
+                currentMoist!! < moistMin!! -> painterNegative
+                currentMoist!! > moistMax!! -> painterPositive
+                else -> painterNeutral
+            }
+        }
+    }
+
+    fun fetchPlantStats(param: String) {
+        databaseRef3.child(param).child("MoistMax").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                moistMax = snapshot.getValue(Int::class.java)
+                updatePainter()
+            }
+            override fun onCancelled(error: DatabaseError) {
+                isError = true
+            }
+        })
+
+        databaseRef3.child(param).child("MoistMin").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                moistMin = snapshot.getValue(Int::class.java)
+                updatePainter()
+            }
+            override fun onCancelled(error: DatabaseError) {
+                isError = true
+            }
+        })
+
+        databaseRef2.child("moisture").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                currentMoist = snapshot.getValue(Int::class.java)
+                updatePainter()
+            }
+            override fun onCancelled(error: DatabaseError) {
+                isError = true
+            }
+        })
+    }
+
+    DisposableEffect(Unit) {
+        // First data fetch: Find the Plant Name
+        val initialParamListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var param = snapshot.getValue(String::class.java)?.trim() //To Remove front spaces IT DOESNT WORK I HAVE BEEN LIED TO BY STACKOVERLFLOW
+                if (param != null) {
+                    param = param.replace(Regex("^\\s+|\\s+$"), "") //mfw I have to do Regex
+                    Log.d("Firebase", "Param being used is ${param}")
+                    fetchPlantStats(param)
+                } else {
+                    isError = true
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                isError = true
+            }
+        }
+        databaseRef2.child("currentPlant").addValueEventListener(initialParamListener)
+
+        onDispose {
+            databaseRef2.child("currentPlant").removeEventListener(initialParamListener)
+        }
+    }
+
+    Image(
+        modifier = modifier
+            .padding(top = 15.dp)
+            .size(100.dp),
+        painter = painter,
+        contentDescription = null
+    )
 }
 
 @Composable
@@ -186,21 +274,15 @@ fun PlantImg(
     val database = FirebaseDatabase.getInstance("https://sem4-appeng-database-default-rtdb.asia-southeast1.firebasedatabase.app")
     databaseRef1 = database.getReference("CurrentData")
 
-    // Create a variable to hold the Firebase Storage URL
-    // Create a variable to hold the Firebase Storage URL
     var firebaseImageUrl by remember { mutableStateOf<String?>(null) }
 
-    // Fetch Firebase Storage URL asynchronously
     LaunchedEffect(key1 = true) {
         val valueEventListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                // Assuming snapshot.getValue() returns the URL as a String
                 firebaseImageUrl = snapshot.getValue(String::class.java)
                 Log.d("Firebase", "Fetched URL: $firebaseImageUrl")
             }
-
             override fun onCancelled(error: DatabaseError) {
-                // Handle error
                 Log.e("Firebase", "Error fetching image URL", error.toException())
             }
         }
@@ -208,12 +290,8 @@ fun PlantImg(
 
     }
 
-    val painter = // Optionally, you can customize the image loading
-        // e.g., placeholder, error, transformations
-        rememberAsyncImagePainter(firebaseImageUrl)
-
-    Log.d("Firebase", firebaseImageUrl.toString())
-
+    val painter = rememberAsyncImagePainter(firebaseImageUrl)
+    //Log.d("Firebase", firebaseImageUrl.toString())
     Image(
         painter = painter,
         contentDescription = null,
