@@ -1,115 +1,100 @@
 package com.comporg.finalprojectv3
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import com.google.firebase.Firebase
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import androidx.core.widget.NestedScrollView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.database.*
 
-class PageStat: AppCompatActivity() {
+class PageStat : AppCompatActivity() {
 
     private lateinit var databaseRef1: DatabaseReference
     private lateinit var databaseRef2: DatabaseReference
 
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<NestedScrollView>
     private lateinit var humidView: TextView
     private lateinit var moistView: TextView
-    private lateinit var humidViewText: TextView
-    private lateinit var moistViewText: TextView
+    private lateinit var plantNameView: TextView
+    private lateinit var additionalImageView: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.statpage)
 
-        humidView = findViewById(R.id.humidViewXML)
-        moistView = findViewById(R.id.moistViewXML)
+        // Initialize views
+        val bottomSheet: NestedScrollView = findViewById(R.id.bottom_sheet)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetBehavior.peekHeight = resources.getDimensionPixelSize(R.dimen.bottom_sheet_peek_height)
+        bottomSheetBehavior.isFitToContents = false
 
-        humidViewText = findViewById(R.id.humidViewText)
-        moistViewText = findViewById(R.id.moistViewText)
+        // Customize max height for expanded state
+        bottomSheetBehavior.setExpandedOffset(resources.getDimensionPixelSize(R.dimen.bottom_sheet_expanded_offset))
 
-        humidViewText.text = "Humidity :"
-        moistViewText.text = "Moisture :"
+        humidView = findViewById(R.id.humidView)
+        moistView = findViewById(R.id.moistView)
+        plantNameView = findViewById(R.id.plantNameView)
+        additionalImageView = findViewById(R.id.additional_ImageView)
 
-
+        // Set up Firebase database references
         val database = FirebaseDatabase.getInstance("https://sem4-appeng-database-default-rtdb.asia-southeast1.firebasedatabase.app")
-        databaseRef1 = database.getReference("CurrentData/humidity") // Adjust the path to your data
-        databaseRef2 = database.getReference("CurrentData/moisture") // Adjust the path to your data
+        databaseRef1 = database.getReference("CurrentData/humidity")
+        databaseRef2 = database.getReference("CurrentData/moisture")
 
-        // Find the ComposeView in the layout
-        val composeView: ComposeView = findViewById(R.id.compose_view)
-
+        // Retrieve humidity data from Firebase
         databaseRef1.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get the data from the snapshot
-                val value = when (val data = dataSnapshot.value) {
-                    is String -> data
-                    is Long -> data.toString()
-                    else -> "Unknown type"
-                }                // Display the data in the TextView
-                humidView.text = value
+                val humidity = dataSnapshot.value
+                humidView.text = humidity.toString()
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Log the error
-                Log.w("Firebase", "Failed to read value.", error.toException())
+                Log.w("Firebase", "Failed to read humidity value.", error.toException())
             }
         })
 
+        // Retrieve moisture data from Firebase
         databaseRef2.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get the data from the snapshot
-                val value = when (val data = dataSnapshot.value) {
-                    is String -> data
-                    is Long -> data.toString()
-                    else -> "Unknown type"
-                }                // Display the data in the TextView
-                moistView.text = value
+                val moisture = dataSnapshot.value
+                moistView.text = moisture.toString()
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Log the error
-                Log.w("Firebase", "Failed to read value.", error.toException())
+                Log.w("Firebase", "Failed to read moisture value.", error.toException())
             }
         })
 
-        // Set the content of the ComposeView
-        composeView.setContent {
-            // Call your composable function here
-            //testText()
+        // Set up BottomSheetBehavior callback to detect state changes
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    showAdditionalInfo(true)
+                } else {
+                    showAdditionalInfo(false)
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                // Unused, but required to implement
+            }
+        })
+
+        // Initialize the bottom sheet state
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        showAdditionalInfo(false)
+    }
+
+    private fun showAdditionalInfo(show: Boolean) {
+        additionalImageView.visibility = if (show) {
+            View.VISIBLE
+        } else {
+            View.GONE
+            // Set visibility for additional info views as needed
         }
-
-
-
-
     }
 }
-
-//@Composable
-//fun testText(
-//
-//) {
-//    Text(text = "Amongus")
-//}
-
-
-
 
