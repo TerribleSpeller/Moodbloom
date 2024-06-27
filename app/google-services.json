@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "222431757740",
+    "project_id": "sem4-appeng-database",
+    "storage_bucket": "sem4-appeng-database.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222431757740:android:6b4272a819b803627ae609",
+        "android_client_info": {
+          "package_name": "com.comporg.finalprojectv3"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "NO KEY HERE ASK PROJECT LEAD FOR KEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
