@@ -76,7 +76,6 @@ dependencies {
     implementation("com.squareup.picasso:picasso:2.71828")
     implementation("io.coil-kt:coil:2.6.0")
     implementation("io.coil-kt:coil-compose:2.6.0")
-
     //Firebase Six
     implementation("com.google.firebase:firebase-database-ktx:21.0.0")
     implementation("com.google.firebase:firebase-auth:23.0.0")
