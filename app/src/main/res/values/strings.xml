@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FinalProjectv3</string>
+    <string name="app_name">MoodBloom</string>
     <string name="plantID" translatable="false">29385823858238</string>
     <string name="splashName" translatable="false">Lets take care of your plants</string>
     <string name="exampleName" translatable="false">John</string>
