@@ -1,6 +1,7 @@
 package com.comporg.finalprojectv3
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -297,7 +299,7 @@ fun PlantImg(
         contentDescription = null,
         modifier = modifier
             .size(330.dp)
-            .padding(top = 15.dp)
+            .padding(top = 15.dp, bottom = 35.dp)
     )
 }
 
@@ -351,7 +353,7 @@ fun TopBar(
                     }
                     .padding(end = 35.dp),
 
-            )
+                )
         }
         Row {
             Text(
@@ -407,32 +409,39 @@ fun bottomMenu(
 ) {
     val context = LocalContext.current
 
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .fillMaxWidth()
             .background(Color.Transparent)
             .padding(bottom = 0.dp)
     ) {
         Image(
             painter = painterResource(R.drawable.bottommenubox),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
         )
-        Column (
+        Column(
             modifier = Modifier
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center
-        ){
+        ) {
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(0.dp, -10.dp)
+                    .offset(y = (-30).dp) // Adjust the offset to move the plussymbol up
             ) {
                 Image(
                     painter = painterResource(R.drawable.plussymbollate),
                     modifier = modifier
-                        .size(50.dp)
+                        .size(55.dp)
                         .clickable {
                             val intent = Intent(context, PageThree::class.java)
                             context.startActivity(intent)
@@ -443,49 +452,36 @@ fun bottomMenu(
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
-                    .padding(60.dp, 6.dp)
+                    .padding(start = 40.dp, end = 40.dp) // Adjust padding to ensure space between icons and edges
                     .fillMaxWidth()
-                    .offset(0.dp, -25.dp)
+                    .offset(y = (-25).dp) // Adjust vertical offset if necessary
             ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                Image(
+                    painter = painterResource(R.drawable.staticon),
                     modifier = Modifier
+                        .size(70.dp) // Increase the size of the staticon
                         .clickable {
                             val intent = Intent(context, PageStat::class.java)
                             context.startActivity(intent)
                         },
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.staticon),
-                        modifier = modifier.size(70.dp),
-                        contentDescription = null
-                    )
-                }
-                Column(
-                    verticalArrangement = Arrangement.Center,
+                    contentDescription = null
+                )
+                Image(
+                    painter = painterResource(R.drawable.commicon),
                     modifier = Modifier
+                        .size(70.dp) // Increase the size of the commicon
                         .clickable {
-                            val intent = Intent(context, PageFour::class.java)
+                            val intent = Intent(context, PageCommunity::class.java)
                             context.startActivity(intent)
-                        }
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.commicon),
-                        modifier = modifier.size(70.dp),
-                        contentDescription = null
-                    )
-                }
+                        },
+                    contentDescription = null
+                )
             }
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(30.dp)  // Adjust height as necessary
-                .align(Alignment.BottomCenter)
-                .background(colorResource(id = R.color.bottom_nav))  // Set to the desired background color
-        )
     }
 }
+
+
 @Preview(showBackground = true)
 @Composable
 fun HomePagePreview() {
