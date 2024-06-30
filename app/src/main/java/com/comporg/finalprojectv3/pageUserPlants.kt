@@ -20,7 +20,6 @@ class PageUserPlants : AppCompatActivity(), OnItemClickListener<userPlantItem> {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.pageuserplants)
-
         val recyclerview = findViewById<RecyclerView>(R.id.recyclerview)
         val layoutManager = GridLayoutManager(this, 2) //Thanks.
         recyclerview.layoutManager = layoutManager
@@ -38,12 +37,10 @@ class PageUserPlants : AppCompatActivity(), OnItemClickListener<userPlantItem> {
                 }
                 recyclerview.adapter?.notifyDataSetChanged() //I don't understand this.
             }
-
             override fun onCancelled(error: DatabaseError) {
                 Log.w("Firebase", "Failed to read value.", error.toException())
             }
         })
-
         val adapter = CustomAdapter2(data, this, this)
         recyclerview.adapter = adapter
 
@@ -52,12 +49,9 @@ class PageUserPlants : AppCompatActivity(), OnItemClickListener<userPlantItem> {
         previous_button.setOnClickListener {
             startActivity(Intent(this, PageOneActivity::class.java))
         }
-
-
     }
     override fun onItemClick(item: userPlantItem) {
         Log.d("ItemClick", "Clicked on: ${item.name}")
-        // Handle item click for userPlantItem
         updateMainPath(item)
     }
 
@@ -69,7 +63,6 @@ class PageUserPlants : AppCompatActivity(), OnItemClickListener<userPlantItem> {
     private fun removePlantToFirebase(plantItem: userPlantItem) {
         // Generate loc
         val plantRef = databaseRef1.child(plantItem.id)
-        // Removing the value at the specified reference
         Log.d("Firebase",plantRef.toString())
         plantRef.removeValue()
             .addOnSuccessListener {
@@ -83,14 +76,11 @@ class PageUserPlants : AppCompatActivity(), OnItemClickListener<userPlantItem> {
 
     private fun updateMainPath(plantItem: userPlantItem) {
         Log.d("Firebase", "Thig to push ${plantItem}")
-        // Set the value t the new reference
         frontPagedatabaseRef.child("img").setValue(plantItem.img)
             .addOnSuccessListener {
                 Log.d("Firebase", "Data removed successfully for ID: ${plantItem.id}")
-                //startActivity(Intent(this, PageOneActivity::class.java))
             }
             .addOnFailureListener { exception ->
-                // Error occurred
                 Log.e("Firebase", "Error adding data", exception)
             }
         frontPagedatabaseRef.child("currentPlant").setValue(plantItem.name)
@@ -103,9 +93,6 @@ class PageUserPlants : AppCompatActivity(), OnItemClickListener<userPlantItem> {
                 Log.e("Firebase", "Error adding data", exception)
             }
         //TODO: Get optimal Humidity and Moisture levels
-
         startActivity(Intent(this, PageOneActivity::class.java))
-
-
     }
 }

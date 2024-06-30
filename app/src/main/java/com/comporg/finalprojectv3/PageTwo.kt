@@ -8,9 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class PageTwo : AppCompatActivity() {
 
-    // define the global variable
     private lateinit var question2: TextView
-    // Add button Move to next Activity and previous Activity
     private lateinit var next_button: Button
     private lateinit var previous_button: Button
 

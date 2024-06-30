@@ -17,8 +17,6 @@ class SignInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
         firebaseAuth = FirebaseAuth.getInstance()
         binding.textView.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
@@ -30,14 +28,12 @@ class SignInActivity : AppCompatActivity() {
             val pass = binding.passET.text.toString()
 
             if (email.isNotEmpty() && pass.isNotEmpty()) {
-
                 firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
                     if (it.isSuccessful) {
                         val intent = Intent(this, PageOneActivity::class.java)
                         startActivity(intent)
                     } else {
                         Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
-
                     }
                 }
             } else {
@@ -46,10 +42,8 @@ class SignInActivity : AppCompatActivity() {
             }
         }
     }
-
     override fun onStart() {
         super.onStart()
-
         if(firebaseAuth.currentUser != null){
             val intent = Intent(this, PageOneActivity::class.java)
             startActivity(intent)
