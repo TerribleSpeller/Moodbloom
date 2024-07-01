@@ -13,6 +13,17 @@
         android:scaleType="centerCrop"
         android:src="@drawable/plantpicnew"/>
 
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/left_arrow" />
+
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
@@ -42,9 +53,9 @@
                     android:id="@+id/plantNameView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="32sp"
+                    android:textSize="30sp"
                     android:padding="10dp"
-                    android:text="Plant Name"
+                    android:text="Details"
                     android:textStyle="bold"
                     android:textColor="@color/heading"
                     android:textAppearance="@font/rambla_bold"/>
@@ -83,7 +94,8 @@
                                 android:padding="4dp"
                                 android:text="Humidity"
                                 android:textColor="@color/heading"
-                                android:textAppearance="@font/rambla_italic"/>
+                                android:textStyle="bold"
+                                android:textAppearance="@font/rambla_regular"/>
 
                             <TextView
                                 android:id="@+id/humidView"
@@ -125,6 +137,7 @@
                                 android:textSize="22sp"
                                 android:padding="4dp"
                                 android:text="Moisture"
+                                android:textStyle="bold"
                                 android:textAppearance="@font/rambla_italic"/>
 
                             <TextView
@@ -143,10 +156,61 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:padding="10dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:src="@drawable/tempicon"
+                            android:layout_marginEnd="8dp"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView
+                                android:id="@+id/tempLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="22sp"
+                                android:padding="4dp"
+                                android:text="Temperature"
+                                android:textStyle="bold"
+                                android:textColor="@color/heading"
+                                android:textAppearance="@font/rambla_italic"/>
+
+                            <TextView
+                                android:id="@+id/tempView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:padding="4dp"
+                                android:text=""
+                                android:textColor="@color/heading"
+                                android:textAppearance="@font/rambla_italic"
+                                android:gravity="center"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
                 <ImageView
                     android:id="@+id/additional_ImageView"
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
+                    android:layout_height="135dp"
                     android:layout_gravity="center_horizontal|bottom"
                     android:src="@drawable/bannerstat"
                     android:visibility="gone"

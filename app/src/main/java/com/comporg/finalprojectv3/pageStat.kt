@@ -1,5 +1,6 @@
 package com.comporg.finalprojectv3
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,16 +15,20 @@ class PageStat : AppCompatActivity() {
 
     private lateinit var databaseRef1: DatabaseReference
     private lateinit var databaseRef2: DatabaseReference
+    private lateinit var databaseRef3: DatabaseReference
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<NestedScrollView>
     private lateinit var humidView: TextView
     private lateinit var moistView: TextView
+    private lateinit var tempView: TextView
     private lateinit var plantNameView: TextView
     private lateinit var additionalImageView: ImageView
+    private lateinit var backButton: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.statpage)
+
 
         // Initialize views
         val bottomSheet: NestedScrollView = findViewById(R.id.bottom_sheet)
@@ -36,13 +41,16 @@ class PageStat : AppCompatActivity() {
 
         humidView = findViewById(R.id.humidView)
         moistView = findViewById(R.id.moistView)
+        tempView = findViewById(R.id.tempView)
         plantNameView = findViewById(R.id.plantNameView)
         additionalImageView = findViewById(R.id.additional_ImageView)
+        backButton = findViewById(R.id.backButton)
 
         // Set up Firebase database references
         val database = FirebaseDatabase.getInstance("https://sem4-appeng-database-default-rtdb.asia-southeast1.firebasedatabase.app")
         databaseRef1 = database.getReference("CurrentData/humidity")
         databaseRef2 = database.getReference("CurrentData/moisture")
+        databaseRef3 = database.getReference("CurrentData/temp")
 
         // Retrieve humidity data from Firebase
         databaseRef1.addValueEventListener(object : ValueEventListener {
@@ -68,6 +76,17 @@ class PageStat : AppCompatActivity() {
             }
         })
 
+        databaseRef3.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val temp = dataSnapshot.value
+                tempView.text = temp.toString()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w("Firebase", "Failed to read moisture value.", error.toException())
+            }
+        })
+
         // Set up BottomSheetBehavior callback to detect state changes
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -86,6 +105,13 @@ class PageStat : AppCompatActivity() {
         // Initialize the bottom sheet state
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         showAdditionalInfo(false)
+
+        backButton.setOnClickListener {
+            val intent = Intent(this, PageOneActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
     }
 
     private fun showAdditionalInfo(show: Boolean) {

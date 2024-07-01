@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "222431757740",
+    "firebase_url": "https://sem4-appeng-database-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "sem4-appeng-database",
     "storage_bucket": "sem4-appeng-database.appspot.com"
   },
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "NO KEY HERE ASK PROJECT LEAD FOR KEY"
+          "current_key": "AIzaSyCD-m4Po3Rvl5Y5yYZ-52AGbjf-QU4PgR8"
         }
       ],
       "services": {
